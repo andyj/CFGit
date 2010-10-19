@@ -51,7 +51,7 @@
 	<!--- wrapped up the execute in a function to save repetition --->
 	<cffunction name="execGit" access="private" output="false" returntype="string">
 		<cfargument name="argCommand" required="true" type="string">
-		<cfargument name="argArguments" required="true" type="string">
+		<cfargument name="argArguments" required="false" type="string" default="">
 		
 		<cfset var local = {} />
 		
@@ -63,7 +63,8 @@
 		</cfexecute>		
 		
 		<cfif len( trim( local.err ) )>
-			<cfreturn '<span style="color:red;">' & local.err  & "</span>">
+			<cfset local.msg = "error running Git command #uCase(argCommand)# in execGit()">
+			<cfthrow detail="#local.err#" type="git" message="#local.msg#" />
 		<cfelse>
 			<cfreturn local.out>
 		</cfif>
