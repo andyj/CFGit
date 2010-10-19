@@ -25,7 +25,25 @@
 	<!--- End: the setup --->
 
 	<!--- Commands --->
-	<cffunction name="log" access="public" output="false" returntype="any">
+	<cffunction name="add" access="public" output="false" returntype="any" hint="Add file contents to the index">
+		<cfargument
+			name="argFiles"
+			type="string"
+			default="."
+			hint="Limits the number of commits to show" />
+			
+		<cfif len( trim( argN )) AND isValid( "integer", argN )>
+			<cfset argN = "-n " & argN>
+		</cfif>
+		
+		<cfreturn execGit( "log", argN )>
+	</cffunction>
+
+	<cffunction name="diff" access="public" output="false" returntype="any">
+		<cfreturn execGit( "diff" )>
+	</cffunction>
+		
+	<cffunction name="log" access="public" output="false" returntype="any" hint="log">
 		<cfargument
 			name="argN"
 			type="numeric"
@@ -39,17 +57,18 @@
 		<cfreturn execGit( "log", argN )>
 	</cffunction>
 
-	<cffunction name="show" access="public" output="false" returntype="any">
+	<cffunction name="show" access="public" output="false" returntype="any" hint="Show various types of objects">
 		<cfreturn execGit( "show" )>
 	</cffunction>
 	
-	<cffunction name="status" access="public" output="false" returntype="any">
+	<cffunction name="status" access="public" output="false" returntype="any" hint="Show the working tree status">
 		<cfreturn execGit( "status" )>
 	</cffunction>
+
 	<!--- End: Commands --->
 
 	<!--- wrapped up the execute in a function to save repetition --->
-	<cffunction name="execGit" access="private" output="false" returntype="string">
+	<cffunction name="execGit" access="public" output="false" returntype="string">
 		<cfargument name="argCommand" required="true" type="string">
 		<cfargument name="argArguments" required="false" type="string" default="">
 		
