@@ -12,7 +12,7 @@
 		hint="I am the folder you are going to query"
 		type="string" />
 
-	<cffunction name="init" access="public" output="false" returntype="any">
+	<cffunction name="init" access="public" output="false" returntype="any" hint="I setup the CFC">
 		<cfargument name="argGit_path" type="string" required="true">
 		<cfargument name="arggit_folder" type="string" required="true">
 		
@@ -32,11 +32,7 @@
 			default="."
 			hint="Limits the number of commits to show" />
 			
-		<cfif len( trim( argN )) AND isValid( "integer", argN )>
-			<cfset argN = "-n " & argN>
-		</cfif>
-		
-		<cfreturn execGit( "log", argN )>
+		<cfreturn execGit( "add", argFiles )>
 	</cffunction>
 
 	<cffunction name="diff" access="public" output="false" returntype="any">
@@ -76,13 +72,13 @@
 		
 		<cfexecute name = "#getGit_path()#" 
 		    arguments = "--git-dir=#getgit_folder()# #argCommand# #argArguments#"  
-		    timeout = "1"
+		    timeout = "10"
 			variable="local.out"
 			errorvariable="local.err"> 
 		</cfexecute>		
 		
 		<cfif len( trim( local.err ) )>
-			<cfset local.msg = "error running Git command #uCase(argCommand)# in execGit()">
+			<cfset local.msg = "error running Git command <b>$git #uCase(argCommand &" "&argArguments)#</b> in execGit()">
 			<cfthrow detail="#local.err#" type="git" message="#local.msg#" />
 		<cfelse>
 			<cfreturn local.out>
